@@ -1,4 +1,5 @@
 #include "input.h"
+#include "../helpers/String.h"
 
 Input::Input(const char* label) : label(label), valueInt(0), valueDouble(0.0), valueFloat(0.0) {
     
@@ -45,16 +46,9 @@ char* Input::displayString() {
     std::cout << "|" << label << "\n";
     std::cout << "|-> ";
 
-    const int maxBufferSize = 256;
-    char buffer[maxBufferSize];
-
-    std::cin.ignore(); // Limpiar cualquier carácter pendiente en el búfer
-
-    std::cin.getline(buffer, maxBufferSize);
-
-    char* stringValue = new char[strlen(buffer) + 1];
-    strcpy(stringValue, buffer);
-
+    String str;
+    char *input = str.cin();
+    
     std::cout << "--------------------------\n";
-    return stringValue;
+    return input;
 }

@@ -38,6 +38,7 @@ void String::print() const {
 char* String::cin() {
   const int maxSize = 256;
   char* str = new char[maxSize];
+  std::cin.ignore();
   std::cin.getline(str, maxSize);
   delete[] data;
   data = new char[strlen(str) + 1];

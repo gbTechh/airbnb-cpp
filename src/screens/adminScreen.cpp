@@ -4,58 +4,27 @@
 #include "../screenView.h"
 #include "../store/CountryStore.h"
 #include "../models/Country.h"
+#include "../colors.h"
+#include "./baseScreen.h"
 
 AdminScreen::AdminScreen() {}
 
-char AdminScreen::getUserOption(const char* message, const char* label = "Escoja una opción") {
-    system("clear");
-    std::cout << message;
-    Input inputComponent(label);
-    char option = inputComponent.displayChar();
-
-    return option;
-}
-int AdminScreen::getUserOptionInt(const char* message, const char* label) {
-    system("clear");
-    std::cout << message;
-    Input inputComponent(label);
-    int option = inputComponent.displayInt();
-
-    return option;
-}
-char* AdminScreen::getUserOptionString(const char* message, const char* label) {
-    system("clear");
-    std::cout << message;
-    Input inputComponent(label);
-    char* option = inputComponent.displayString();
-
-    return option;
-}
-
 void AdminScreen::show() {
     
-    system("clear");
-    std::cout<<"Pantalla de Administrador\n";
-    std::cout<<"Presiona 0 para regresar o m para ver el menú principal.\n\n";
-
+    cleanScreen();
     loginScreen();
     
 }
 
 void AdminScreen::loginScreen() {
-    char option = getUserOption("Bienvenido administrador, por favor escoja una de las opciones, aprete 0 para regresar o m para ver el menú principal.\n\n1) Iniciar sesión\n2) Registrarse\n");
-    ScreenView screen;
+    cleanScreen();
+    std::cout<<VERDE<<"Pantalla de Administrador\n"<<RESET;
+    char option = getUserOptionChar("Bienvenido administrador, por favor escoja una de las opciones, aprete m para ver el menú principal.\n\n1) Iniciar sesión\n", "Escoge una opción");
 
-    if (option == '0') {
-        option = 'm';
-        screen.start(option);
-    }
     if (option == '1') {
         loginShow();
-    } else if (option == '2') {
-        registerShow();
     } else if (option == 'm') {
-        screen.start(option);
+        returnMainMenu();
     } else {
         loginScreen();
     }    
@@ -63,34 +32,33 @@ void AdminScreen::loginScreen() {
 
 
 void AdminScreen::loginShow() {
-    char option = getUserOption("Por favor ingrese sus credenciales. Aprete 'y' para continuar 'n' para regresar o 'm' para ver el menú principal.\n");
-    ScreenView screen;
+    cleanScreen();
+    std::cout<<VERDE<<"Iniciar Sesión Adminsitrador\n"<<RESET;
+    char option = getUserOptionChar("Esta a punto de iniciar sesión. Aprete 'y' para continuar 'n' para regresar o 'm' para ver el menú principal.\n", "Continuar y/n");
     if (option == 'y') {
         Input inputUsername("Escriba su username:");
-        char username = inputUsername.displayChar();
+        char* username = inputUsername.displayString();
         Input inputPassword("Escriba su password:");
-        char password = inputPassword.displayChar();
+        char* password = inputPassword.displayString();
 
         menuAdminShow();
     } else if (option == 'n') {
         loginScreen();
     } else if(option == 'm'){
-        screen.start(option);
+        returnMainMenu();
     } else {
         loginShow();
     }   
     
 }
 
-void AdminScreen::registerShow() {
-    
-    char option = getUserOption("Escoja una opción:");
-}
+
 
 void AdminScreen::menuAdminShow() {
-    char option = getUserOption("Bienvenido administrador. Por favor escoja una de las opciones, o aprete '0' para salir de adminsitrador o 'm' para ver el menú principal.\n1) Módulo de Países\n2) Módulo de ciudades\n3) Módulo de usuarios\n4) Módulo de alojamientos\n");
+    cleanScreen();
+    std::cout<<VERDE<<"Bienvenido Administrador\n"<<RESET;
+    char option = getUserOptionChar("Por favor escoja una de las opciones, o aprete '0' para salir de adminsitrador o 'm' para ver el menú principal.\n1) Módulo de Países\n2) Módulo de ciudades\n3) Módulo de usuarios\n4) Módulo de alojamientos\n0) Salir de administrador\n", "Escoge una opción: ");
 
-    ScreenView screen;
 
     if(option == '1'){
         char opt = 'c';
@@ -105,27 +73,27 @@ void AdminScreen::menuAdminShow() {
     }else if(option == '0'){
         loginScreen();
     }else if(option == 'm'){
-        screen.start(option);
+        returnMainMenu();
     }else {
         menuAdminShow();
     }
 }
 void AdminScreen::countryShow(char &option) {
+    cleanScreen();
     char getOption;
-    ScreenView screen;
     if(option == 'c'){
-        getOption = getUserOption("Módulo de países. Por favor escoja una de las opciones, o aprete '0' para retroceder o 'm' para ver el menú principal.\n1) Listar Países\n2) Crear Países\n3) Editar Países\n4) Eliminar Países\n0) Retroceder\nm) Volver al menu principal\n");
+        getOption = getUserOptionChar("Módulo de países. Por favor escoja una de las opciones, o aprete '0' para retroceder o 'm' para ver el menú principal.\n1) Listar Países\n2) Crear Países\n3) Editar Países\n4) Eliminar Países\n0) Retroceder\nm) Volver al menu principal\n", "Escoge una opción: ");
         countryShow(getOption);
     }else {
         if(option == '1'){ //Listar pais
             countryList();               
         }else if(option == '2'){ //Crear pais
             countryCreate();
-            char nextOption = getUserOption("Seguir llenando datos? y/n o 'm' para vovler al menu principal.");
+            char nextOption = getUserOptionChar("Seguir llenando datos? y/n o 'm' para vovler al menu principal.", "Escoge una opción: ");
             if(nextOption == 'y'){
                 countryShow(option);
             } else if(nextOption == 'm'){
-                screen.start(nextOption);
+                returnMainMenu();
             } else {
                 menuAdminShow();
             }
@@ -137,7 +105,7 @@ void AdminScreen::countryShow(char &option) {
         }else if(option == '0'){
             menuAdminShow();
         }else if(option == 'm'){
-            screen.start(option);
+            returnMainMenu();
         }else {
             char opt = 'c';
             countryShow(opt);
@@ -157,7 +125,7 @@ void AdminScreen::countryCreate() {
    
 }
 void AdminScreen::countryList() {
-    // char option = getUserOption("Listando todos los países. Para retroceder aprete '0' o 'm' para ver el menú principal.");
+    // char option = getUserOptionChar("Listando todos los países. Para retroceder aprete '0' o 'm' para ver el menú principal.");
     
     CountryStore countryStore;
 
@@ -175,14 +143,14 @@ void AdminScreen::cityShow(char &option) {
     char getOption;
     ScreenView screen;
     if(option == 'c'){
-        getOption = getUserOption("Módulo de ciudades. Por favor escoja una de las opciones, o aprete '0' para retroceder o 'm' para ver el menú principal.\n1) Listar ciudades\n2) Crear Ciudades\n3) Editar ciudades\n4) Eliminar ciudades\n");
+        getOption = getUserOptionChar("Módulo de ciudades. Por favor escoja una de las opciones, o aprete '0' para retroceder o 'm' para ver el menú principal.\n1) Listar ciudades\n2) Crear Ciudades\n3) Editar ciudades\n4) Eliminar ciudades\n", "Escoge una opción: ");
         cityShow(getOption);
     }else {
         if(option == '1'){ //Listar ciudad
             cityList();               
         }else if(option == '2'){ //Crear ciudad
             cityCreate();
-            char nextOption = getUserOption("Seguir llenando datos? y/n o 'm' para vovler al menu principal.");
+            char nextOption = getUserOptionChar("Seguir llenando datos? y/n o 'm' para vovler al menu principal.", "Escoge una opción: ");
             if(nextOption == 'y'){
                 cityShow(option);
             } else if(nextOption == 'm'){
@@ -222,7 +190,7 @@ void AdminScreen::cityCreate() {
 	delete[] option;
 }
 void AdminScreen::cityList() {
-    // char option = getUserOption("Listando todos los países. Para retroceder aprete '0' o 'm' para ver el menú principal.");
+    // char option = getUserOptionChar("Listando todos los países. Para retroceder aprete '0' o 'm' para ver el menú principal.");
     
     CountryStore countryStore;
 

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "./screenView.h"
 #include "./helpers/String.h"
+#include "./colors.h"
 
 using namespace std;
 
