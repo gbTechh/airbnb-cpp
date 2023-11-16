@@ -8,7 +8,7 @@
 AdminScreen::AdminScreen() {}
 
 char AdminScreen::getUserOption(const char* message, const char* label = "Escoja una opción") {
-    system("clear");
+    system("cls");
     std::cout << message;
     Input inputComponent(label);
     char option = inputComponent.displayChar();
@@ -16,7 +16,7 @@ char AdminScreen::getUserOption(const char* message, const char* label = "Escoja
     return option;
 }
 int AdminScreen::getUserOptionInt(const char* message, const char* label) {
-    system("clear");
+    system("cls");
     std::cout << message;
     Input inputComponent(label);
     int option = inputComponent.displayInt();
@@ -24,7 +24,7 @@ int AdminScreen::getUserOptionInt(const char* message, const char* label) {
     return option;
 }
 char* AdminScreen::getUserOptionString(const char* message, const char* label) {
-    system("clear");
+    system("cls");
     std::cout << message;
     Input inputComponent(label);
     char* option = inputComponent.displayString();
@@ -34,7 +34,7 @@ char* AdminScreen::getUserOptionString(const char* message, const char* label) {
 
 void AdminScreen::show() {
     
-    system("clear");
+    system("cls");
     std::cout<<"Pantalla de Administrador\n";
     std::cout<<"Presiona 0 para regresar o m para ver el menú principal.\n\n";
 

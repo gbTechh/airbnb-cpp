@@ -1,19 +1,24 @@
-cmake_minimum_required(VERSION 3.0)
+#############################################################
+# Initialization
+#############################################################
 
-project(baseDeDatos)
+project( airbnb )
 
-# Agrega todos los archivos fuente en la carpeta 'src'
-file(GLOB SOURCES "src/*.cpp" "src/models/*.cpp" "src/controller/*.cpp" "src/components/*.cpp" "src/screens/*.cpp" "src/store/*.cpp" "src/helpers/*.cpp")
+message( "Source of application:  ${CMAKE_SOURCE_DIR} " )
+message( "Subproject name:  ${PROJECT_NAME} " )
 
-# Crea un ejecutable a partir de los archivos fuente
-add_executable(main ${SOURCES})
+set(CMAKE_BINARY_DIR "${CMAKE_SOURCE_DIR}/bin")
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR} )
 
-# Configura propiedades del ejecutable, como C++ estándar
-set_target_properties(main PROPERTIES CXX_STANDARD 17)
+message( "Source of application:  ${CMAKE_BINARY_DIR} " )
 
-# Enlace con la biblioteca NCurses
-find_package(Curses REQUIRED)
-target_link_libraries(main PRIVATE ${CURSES_LIBRARIES})
+file(GLOB_RECURSE SOURCES "*.cpp" )
+file(GLOB_RECURSE HEADERS "*.h" )
 
-# Incluye las cabeceras de NCurses
-target_include_directories(main PRIVATE ${CURSES_INCLUDE_DIRS})
+# include_directories( ${OpenCV_INCLUDE_DIRS} )
+ 
+add_executable( ${PROJECT_NAME}  
+				${HEADERS} 
+				${SOURCES})
+				
+target_link_libraries( ${PROJECT_NAME} )

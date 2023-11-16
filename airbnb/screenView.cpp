@@ -45,7 +45,7 @@ void ScreenView::start(char &input) {
 }
 
 void ScreenView::menuMain(){
-    system("clear");
+    system("cls");
     cout << "Bienvenido. Elija una de las opciones: \n";
     cout << "1) Eres administrador.\n";
     cout << "2) Eres usuario host.\n";
