@@ -7,14 +7,14 @@ HostScreen::HostScreen() {}
 
 void HostScreen::show() {
     
-    system("clear");
+    cleanScreen();
     std::cout<<"Pantalla de usuario Host\n";
     std::cout<<"Presiona 0 para regresar o m para ver el menú principal.\n\n";
 
     loginScreen();
 }
 void HostScreen::loginScreen() {
-    system("clear");
+    cleanScreen();
     std::cout<<"Bienvenido usuario Host, por favor escoja una de las opciones, aprete 0 para regresar o m para ver el menú principal.\n\n";
     std::cout<<"1) Iniciar sesión\n";
     std::cout<<"2) Registrarse\n";
@@ -37,7 +37,7 @@ void HostScreen::loginScreen() {
     }    
 }
 void HostScreen::loginShow() {
-    system("clear");
+    cleanScreen();
     std::cout<<"Por favor ingrese sus credenciales. Aprete 'y' para continuar 'n' para regresar o 'm' para ver el menú principal.\n";
     Input inputNext("Desea continar? y/n");
     char option = inputNext.displayChar();
