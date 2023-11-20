@@ -9,7 +9,7 @@ public:
     void createAdmin();
     char** getAllUsers();
     char** getAllUsersById();
-    char** getAllUsersByEmail(char* email);
+    char* getUserByEmail(char* email);
 
 private:
     User* users;

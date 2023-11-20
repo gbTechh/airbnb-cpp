@@ -20,6 +20,7 @@ void AdminScreen::show() {
 void AdminScreen::initFilesScreen() {
     CountryStore country;
     country.createFile();
+    
     UserStore user;
     user.createFile();
     user.createAdmin();

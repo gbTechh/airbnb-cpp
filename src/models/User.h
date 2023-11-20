@@ -2,7 +2,7 @@
 
 class User {
 public:
-    User(const char* email, int id, const char* name, const char* password);
+    User(const char* email, const char* name, const char* password);
 
     const char* getEmail() const;
     int getId() const;

@@ -1,8 +1,8 @@
 #include "./Host.h"
 #include <iostream>
 
-Host::Host(const char* _email, int _id, const char* _name, const char* _password)
-    : User(_email, _id, _name, _password) {
+Host::Host(const char* _email, const char* _name, const char* _password)
+    : User(_email, _name, _password) {
       setTipoUsuario(0);
     }
 

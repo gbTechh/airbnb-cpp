@@ -3,7 +3,7 @@
 
 class Host : public User {
 public:
-    Host(const char* email, int id, const char* name, const char* password);
+    Host(const char* email, const char* name, const char* password);
     
     void permisos() override;
 };

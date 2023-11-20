@@ -11,11 +11,12 @@ using namespace std;
 int main(int argc, char *argv[])
 {   
 
+
     char input = 'm';
     
 
-    // ScreenView screen;
-    // screen.start(input);
+    ScreenView screen;
+    screen.start(input);
    
     return 0;
 }

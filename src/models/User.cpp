@@ -1,8 +1,8 @@
 #include "./User.h"
 
 // Implementación del constructor de la clase Usuario
-User::User(const char* _email, int _id, const char* _name, const char* _password)
-    : email(_email), id(_id), name(_name), password(_password) {}
+User::User(const char* _email, const char* _name, const char* _password)
+    : email(_email), name(_name), password(_password) {}
 
 // Implementación de los métodos para obtener los atributos del usuario
 const char* User::getEmail() const {

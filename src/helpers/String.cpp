@@ -57,16 +57,22 @@ int String::length() {
   return i;
 }
 bool String::includes(char* text) {
-  bool isIncluded = false;
-  int i = 0, j = 0;
-  while(!isIncluded){
-    while(data[i] != '\0'){
-      if(data[i] == text[j]){
-        
-      }
-      i++;
-      j++;
+  int i = 0;
+    while (data[i] != '\0') {
+        int j = 0;
+        int temp_i = i; 
+
+        while (data[temp_i] == text[j] && text[j] != '\0') {
+            temp_i++;
+            j++;
+        }
+
+        if (text[j] == '\0') {           
+            return true;
+        }
+
+        i++;
     }
-  }
-  return true; 
+
+    return false;
 }
