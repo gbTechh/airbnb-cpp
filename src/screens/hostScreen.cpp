@@ -62,3 +62,7 @@ void HostScreen::registerShow() {
     Input inputComponent("Escoja una opción:");
     char username = inputComponent.displayChar();
 }
+
+void HostScreen::initFilesScreen() {
+    
+}

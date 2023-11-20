@@ -10,14 +10,17 @@ using namespace std;
 ScreenView::ScreenView() {}
 
 void ScreenView::start(char &input) {
+    AdminScreen adminScreen;
+    adminScreen.initFilesScreen();
+
+
     if(input == '1' || input == '2' || input == '3' || input == '0'){
         if (input == '0') {
             return;
         }
        
         char option = input;
-        if (option == '1') {
-            AdminScreen adminScreen;
+        if (option == '1') {            
             adminScreen.show();   
             return;    
         } else if(option == '2') {

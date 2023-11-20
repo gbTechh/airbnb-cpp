@@ -5,33 +5,12 @@
 #include "../models/Country.h"
 #include "./Store.h"
 
-CountryStore::CountryStore() : filename("countries.txt"), countries(nullptr), numCountries(0) {
+CountryStore::CountryStore() : Store("../src/database/files/countries.txt"), countries(nullptr), numCountries(0) {
     std::ifstream file(filename);
 
-    if(file){
-      Store store(filename);
-      numCountries = store.getNumLinesOfFile();
+    if (file) {
+        numCountries = getNumLinesOfFile();
     }
-    //std::ifstream file(filename, std::ios::in);
-
-    // if (file) {
-    //     // Leer el número de países
-    //     file.read(reinterpret_cast<char*>(&numCountries), sizeof(int));
-
-    //     // Reservar memoria para los países
-    //     countries = new Country[numCountries];
-
-    //     // Leer los países desde el archivo
-    //     for (int i = 0; i < numCountries; i++) {
-    //         char name[100];
-    //         file.read(name, sizeof(name));
-    //         int id;
-    //         file.read(reinterpret_cast<char*>(&id), sizeof(int));
-    //         countries[i] = Country(name, id);
-    //     }
-
-    //     file.close();
-    // }
 }
 
 void CountryStore::addCountry(const Country& country) {
@@ -41,20 +20,17 @@ void CountryStore::addCountry(const Country& country) {
     char* countryInfo = new char[longChar];
 	
     std::snprintf(countryInfo, longChar, "%d;%s", rowIndex, country.getName());
-    Store store(filename);
-    store.insertData(countryInfo);
+    insertData(countryInfo);
     
     delete[] countryInfo;
     numCountries++;
 }
 
 char** CountryStore::getAllCountries() {
-	Store store(filename);
-    return store.getAllData();
+    return getAllData();
 }
 char** CountryStore::getAllCountriesById() {
-	Store store(filename);
-    char **data = store.getAllData();
+    char **data = getAllData();
     int count = 0;
 
     while (data[count] != nullptr) {

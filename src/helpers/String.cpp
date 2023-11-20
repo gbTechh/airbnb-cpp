@@ -3,7 +3,7 @@
 #include "./String.h"
 
 
-String::String() : data(nullptr) {}
+String::String() : data(nullptr), lengthStr(0) {}
 
 String::String(const char* str) {
   if (str) {
@@ -12,6 +12,7 @@ String::String(const char* str) {
   } else {
       data = nullptr;
   }
+  lengthStr = 0;
 }
 
 String::String(const String& o) {
@@ -44,4 +45,28 @@ char* String::cin() {
   data = new char[strlen(str) + 1];
   strcpy(data, str);
   return str;
+}
+
+int String::length() {
+  int i = 0;
+  while(data[i] != '\0' ){
+    std::cout<<data[i];
+    i++;
+  }
+  lengthStr = i;
+  return i;
+}
+bool String::includes(char* text) {
+  bool isIncluded = false;
+  int i = 0, j = 0;
+  while(!isIncluded){
+    while(data[i] != '\0'){
+      if(data[i] == text[j]){
+        
+      }
+      i++;
+      j++;
+    }
+  }
+  return true; 
 }

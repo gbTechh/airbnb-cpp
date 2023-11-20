@@ -3,6 +3,7 @@
 #include "../components/input.h"
 #include "../screenView.h"
 #include "../store/CountryStore.h"
+#include "../store/UserStore.h"
 #include "../models/Country.h"
 #include "../colors.h"
 #include "./baseScreen.h"
@@ -10,10 +11,20 @@
 AdminScreen::AdminScreen() {}
 
 void AdminScreen::show() {
-    
+    initFilesScreen();
     cleanScreen();
     loginScreen();
     
+}
+
+void AdminScreen::initFilesScreen() {
+    CountryStore country;
+    country.createFile();
+    UserStore user;
+    user.createFile();
+    user.createAdmin();
+
+
 }
 
 void AdminScreen::loginScreen() {

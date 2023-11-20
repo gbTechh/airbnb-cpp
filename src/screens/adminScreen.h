@@ -5,6 +5,7 @@ class AdminScreen: public BaseScreen {
 public:
     AdminScreen();
     virtual void show() override;
+    virtual void initFilesScreen() override;
     void loginScreen();
     void loginShow();
     void menuAdminShow();

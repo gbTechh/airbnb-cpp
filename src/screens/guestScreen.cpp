@@ -12,3 +12,7 @@ void GuestScreen::show() {
 
     
 }
+
+void GuestScreen::initFilesScreen() {
+    
+}

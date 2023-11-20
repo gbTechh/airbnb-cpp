@@ -1,7 +1,8 @@
 #pragma once
 #include "../models/Country.h"
+#include "./Store.h"
 
-class CountryStore {
+class CountryStore: public Store {
 public:
     CountryStore();
     void addCountry(const Country& country);
@@ -9,7 +10,6 @@ public:
     char** getAllCountriesById();
 
 private:
-    const char* filename;
     Country* countries;
     int numCountries;
 };
