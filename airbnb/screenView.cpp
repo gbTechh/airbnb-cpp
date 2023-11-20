@@ -10,25 +10,17 @@ using namespace std;
 ScreenView::ScreenView() {}
 
 void ScreenView::start(char &input) {
-    if(input == 'm'){
-        menuMain();
-        Input inputComponent("Escoja una opción:");
-        input = inputComponent.displayChar();
-        start(input);
-    }else{
+    AdminScreen adminScreen;
+    adminScreen.initFilesScreen();
+
+
+    if(input == '1' || input == '2' || input == '3' || input == '0'){
         if (input == '0') {
             return;
         }
-
-        if (cin.fail()) {
-            cin.clear();
-            cin.ignore(10000, '\n');
-            cout << "Entrada no válida. Debe ingresar un número entero o 'q' para salir." << endl;
-        }
-
+       
         char option = input;
-        if (option == '1') {
-            AdminScreen adminScreen;
+        if (option == '1') {            
             adminScreen.show();   
             return;    
         } else if(option == '2') {
@@ -39,7 +31,14 @@ void ScreenView::start(char &input) {
             GuestScreen guestScreen;
             guestScreen.show();
             return;
-        }
+        } 
+    }else if(input == 'm'){
+        menuMain();
+        Input inputComponent("Escoja una opción:");
+        input = inputComponent.displayChar();
+        start(input);
+    } else {
+        return;
     }
     
 }

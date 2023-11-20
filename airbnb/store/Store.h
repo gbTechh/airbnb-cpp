@@ -7,8 +7,12 @@ public:
     char** getAllData();
     int getNumLines();
     int getNumLinesOfFile();
+    void createFile();
 
+    //variables
 private:
-    const char* filename;
     int numLines;
+protected:
+    const char* filename;
+
 };

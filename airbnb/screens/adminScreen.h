@@ -1,12 +1,13 @@
 #pragma once
+#include "./baseScreen.h"
 
-class AdminScreen {
+class AdminScreen: public BaseScreen {
 public:
     AdminScreen();
-    void show();
+    virtual void show() override;
+    virtual void initFilesScreen() override;
     void loginScreen();
     void loginShow();
-    void registerShow();
     void menuAdminShow();
     void countryShow(char &option);
     void countryCreate();
@@ -15,8 +16,5 @@ public:
     void cityShow(char &option);
 	void cityCreate();
 	void cityList();
-private:
-    char getUserOption(const char* messag, const char* label);
-    int getUserOptionInt(const char* messag, const char* label);
-    char* getUserOptionString(const char* message, const char* label);
+   
 };

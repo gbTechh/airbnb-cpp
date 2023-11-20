@@ -79,3 +79,14 @@ int Store::getNumLinesOfFile() {
   return lineCount;
 
 }
+
+void Store::createFile() {
+    std::ifstream file(filename);
+    if (!file) {  
+        std::ofstream newFile(filename);
+
+        if (!newFile) {
+            std::cout << "Error al crear el archivo." << filename<<std::endl;            
+        } 
+    }
+}

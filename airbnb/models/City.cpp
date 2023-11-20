@@ -3,7 +3,6 @@
 #include <cstring>
 
 City::City(const char* name) {
-  
     std::strncpy(this->name, name, sizeof(this->name));
     this->name[sizeof(this->name) - 1] = '\0'; 
 }

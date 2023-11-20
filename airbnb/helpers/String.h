@@ -9,7 +9,10 @@ public:
   char* get() const;
   char* cin();
   void print() const;
+  bool includes(char* text);
+  int length();
 
 private:
     char* data;
+    int lengthStr;
 };
