@@ -12,8 +12,8 @@ AdminScreen::AdminScreen() {}
 
 void AdminScreen::show() {
     initFilesScreen();
-    cleanScreen();
-    loginScreen();
+    // cleanScreen();
+    // loginScreen();
     
 }
 
@@ -48,7 +48,7 @@ void AdminScreen::loginShow() {
     std::cout<<VERDE<<"Iniciar Sesión Adminsitrador\n"<<RESET;
     char option = getUserOptionChar("Esta a punto de iniciar sesión. Aprete 'y' para continuar 'n' para regresar o 'm' para ver el menú principal.\n", "Continuar y/n");
     if (option == 'y') {
-        Input inputUsername("Escriba su email:");
+        Input inputUsername("Escriba su username:");
         char* username = inputUsername.displayString();
         Input inputPassword("Escriba su password:");
         char* password = inputPassword.displayString();

@@ -54,7 +54,10 @@ char** Store::getAllData() {
     } else {
         std::cout << "No se pudo abrir el archivo." << std::endl;
     }
-
+    if(numLines == 0){
+        delete[] lineas;
+        lineas = nullptr;
+    }
     return lineas;
 }
 

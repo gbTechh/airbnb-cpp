@@ -15,13 +15,13 @@ UserStore::UserStore() : Store("../src/database/files/users.txt"), users(nullptr
 }
 
 void UserStore::createAdmin(){
-    char* adminEmail = new char[17];
+    char* adminEmail = new char[16];
     strcpy(adminEmail, "admin@gmail.com");
-    bool existsAdmin =  getUserByEmail(adminEmail);
-    if(existsAdmin){
-        // std::cout<<"Ya existe el admin";
-    }else{
+    char* existsAdmin =  getUserByEmail(adminEmail);
+    bool isNull = existsAdmin == nullptr;
+    if(isNull){
         User newUser(adminEmail, "admin", "administrador001");
+        newUser.setTipoUsuario(0);
         addUser(newUser);    
     }
 }
@@ -30,8 +30,7 @@ void UserStore::addUser(const User& user) {
     int rowIndex = numUsers + 1;
 	int longChar = 256;
     char* userInfo = new char[longChar];
-	
-    std::snprintf(userInfo, longChar, "%d;%s", rowIndex, user.getName(), user.getEmail(), user.getPassword(), user.getTipoUsuario());
+    std::snprintf(userInfo, longChar, "%d;%s;%s;%s;%s", rowIndex, user.getName(), user.getEmail(), user.getPassword(), user.getTipoUsuario());
     insertData(userInfo);
     
     delete[] userInfo;
@@ -44,17 +43,22 @@ char** UserStore::getAllUsers() {
 
 char* UserStore::getUserByEmail(char* email) {
 	char** data = getAllData();
-	int count = 0;
-    char* user = new char[17];
-    strcpy(user, "admin@gmail.com");
-	while (data != nullptr && data[count] != nullptr) {
-		count++;
-        String userStr(data[count]);
-        bool existsEmail = userStr.includes(email);
-		if(existsEmail){
-            strcpy(user, data[count]);
+    char* user = nullptr;
+    bool include = false;
+    int count = 0;
+
+    for(int i= 0; i <= numLines - 1; i++){
+        if(!include){
+            char* line = data[i];
+            String userStr(line);
+            include = userStr.includes(email);
+            if(include){
+                user = new char[strlen(line) + 1];
+                strcpy(user, line);
+            }
         }
-	}	
+    }
+  
 	return user;
 }
 

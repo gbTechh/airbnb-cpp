@@ -11,8 +11,8 @@ public:
 
     //variables
 private:
-    int numLines;
 protected:
+    int numLines;
     const char* filename;
 
 };
