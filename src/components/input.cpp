@@ -1,3 +1,5 @@
+#include <limits>
+#include <iostream>
 #include "input.h"
 #include "../helpers/String.h"
 
@@ -40,14 +42,19 @@ char Input::displayChar() {
 }
 
 char* Input::displayString() {
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    
     char corner = 218;
     std::cout << "\n";
     std::cout << corner << "--------------------------\n";
     std::cout << "|" << label << "\n";
     std::cout << "|-> ";
 
+    
     String str;
     char *input = str.cin();
+
+
     
     std::cout << "--------------------------\n";
     return input;

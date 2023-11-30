@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <limits>
 #include "./String.h"
 
 
@@ -37,20 +38,20 @@ void String::print() const {
 }
 
 char* String::cin() {
+
   const int maxSize = 256;
   char* str = new char[maxSize];
-  std::cin.ignore();
   std::cin.getline(str, maxSize);
   delete[] data;
   data = new char[strlen(str) + 1];
   strcpy(data, str);
+
   return str;
 }
 
 int String::length() {
   int i = 0;
-  while(data[i] != '\0' ){
-    std::cout<<data[i];
+  while(data[i] != '\0' ){    
     i++;
   }
   lengthStr = i;
@@ -75,4 +76,33 @@ bool String::includes(char* text) {
     }
 
     return false;
+}
+
+char** String::split(char separator) {
+  int count = 1;
+  for (int i = 0; i < length(); ++i) {
+    if (data[i] == separator) {
+      ++count;
+    }
+  }
+
+  char** result = new char*[count];
+  int start = 0;
+  int resultIndex = 0;
+
+
+  for (int i = 0; i <= length(); ++i) {
+    if (data[i] == separator || data[i] == '\0') {
+      
+      result[resultIndex] = new char[i - start + 1];
+
+      std::memcpy(result[resultIndex], data + start, i - start);
+      result[resultIndex][i - start] = '\0';
+
+      start = i + 1;
+      ++resultIndex;
+    }
+  }
+
+  return result;
 }

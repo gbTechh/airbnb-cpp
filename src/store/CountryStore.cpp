@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <cstdlib>
 #include "CountryStore.h"
 #include "../models/Country.h"
 #include "./Store.h"
@@ -14,8 +15,9 @@ CountryStore::CountryStore() : Store("../src/database/files/countries.txt"), cou
 }
 
 void CountryStore::addCountry(const Country& country) {
-    // Añadir un país al final de la lista
+    
     int rowIndex = numCountries + 1;
+    std::cout<<"rowIndex: "<<rowIndex<<"\n";
 	int longChar = 100;
     char* countryInfo = new char[longChar];
 	
@@ -26,34 +28,49 @@ void CountryStore::addCountry(const Country& country) {
     numCountries++;
 }
 
+bool CountryStore::editCountry(char* id, const Country& country) {
+    int longChar = 100;
+    char* countryInfo = new char[longChar];	
+
+    char* data = getCountryById(id);
+
+    int numOfLine = std::stoi(id);
+
+    if(data == nullptr){
+        return false; 
+    } else {
+        std::snprintf(countryInfo, longChar, "%s;%s", id, country.getName());
+        int isEdited = editLine(numOfLine, countryInfo);
+        if(isEdited){
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
 char** CountryStore::getAllCountries() {
     return getAllData();
 }
-char** CountryStore::getAllCountriesById() {
+
+char* CountryStore::getCountryById(char* id) {
     char **data = getAllData();
     int count = 0;
-
-    while (data[count] != nullptr) {
-        // std::cout << "Pais" << ": " << data[count] << std::endl;
-        count++;
-        // char* ptr = data[count];
-
-        // while (*ptr != ';') { 
-        //     char currentChar = *ptr; 
-            
-        //     std::cout << currentChar << std::endl;
-        //     ptr++;
-        // }
-        // while(data[count] == ';'){
-        //     std::cout<<"detener";
-        // }
-        char* token = std::strtok(data[count], ";");
-        while (token != nullptr) {
-            std::cout << token << std::endl;
-            token = std::strtok(nullptr, ";");
+    int lengthData = numCountries;
+    char separator = ';';
+    char* returnData = nullptr;
+    for(int i = 0; i < numCountries; i++){
+        String line(data[i]);
+        
+        char** arrData = line.split(separator);
+        
+        char* idData = arrData[0];
+        int isSameId = std::strcmp(idData, id);
+        if(isSameId == 0){
+            returnData = data[i];
         }
     }
-    return data;
+  
+    return returnData;
 }
 
 

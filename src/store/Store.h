@@ -8,7 +8,8 @@ public:
     int getNumLines();
     int getNumLinesOfFile();
     void createFile();
-
+    bool editLine(int numOfLine, char* newLine);
+    // int getNumOfLineFromId(char* id);
     //variables
 private:
 protected:

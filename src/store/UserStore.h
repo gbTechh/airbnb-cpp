@@ -10,7 +10,7 @@ public:
     char** getAllUsers();
     char** getAllUsersById();
     char* getUserByEmail(char* email);
-
+    bool authUser(char* email, char* password, const char* rol);
 private:
     User* users;
     int numUsers;

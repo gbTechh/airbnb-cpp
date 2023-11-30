@@ -42,18 +42,26 @@ void AdminScreen::loginScreen() {
     }    
 }
 
-
+//Show screens
 void AdminScreen::loginShow() {
     cleanScreen();
     std::cout<<VERDE<<"Iniciar Sesión Adminsitrador\n"<<RESET;
     char option = getUserOptionChar("Esta a punto de iniciar sesión. Aprete 'y' para continuar 'n' para regresar o 'm' para ver el menú principal.\n", "Continuar y/n");
     if (option == 'y') {
-        Input inputUsername("Escriba su email:");
+        Input inputUsername("Escriba su email: ");
         char* username = inputUsername.displayString();
-        Input inputPassword("Escriba su password:");
+        Input inputPassword("Escriba su password: ");
         char* password = inputPassword.displayString();
+        UserStore user;
 
-        menuAdminShow();
+        char* rol = "admin";
+        bool isAuth = user.authUser(username, password, rol);
+
+        if(!isAuth){
+            loginShow();    
+        }else{
+            menuAdminShow();
+        }
     } else if (option == 'n') {
         loginScreen();
     } else if(option == 'm'){
@@ -63,9 +71,6 @@ void AdminScreen::loginShow() {
     }   
     
 }
-
-
-
 void AdminScreen::menuAdminShow() {
     cleanScreen();
     std::cout<<VERDE<<"Bienvenido Administrador\n"<<RESET;
@@ -111,7 +116,7 @@ void AdminScreen::countryShow(char &option) {
             }
 
         }else if(option == '3'){ //Editar pais
-            
+            countryEdit();
         }else if(option == '4'){ // eliminar Pais
             
         }else if(option == '0'){
@@ -124,34 +129,8 @@ void AdminScreen::countryShow(char &option) {
         }
     }
 }
-//country
-void AdminScreen::countryCreate() {
-    char* option = getUserOptionString("Por favor escriba el nombre de un país.", "Escriba el nombre:");
-    
-    CountryStore countryStore;
-    Country newCountry(option);
-
-    // Luego, llama al método addCountry para agregar el nuevo país a la tienda
-    countryStore.addCountry(newCountry);
-	delete[] option;
-   
-}
-void AdminScreen::countryList() {
-    // char option = getUserOptionChar("Listando todos los países. Para retroceder aprete '0' o 'm' para ver el menú principal.");
-    
-    CountryStore countryStore;
-
-    char **data = countryStore.getAllCountries();
-    int count = 0;
-
-    while (data[count] != nullptr) {
-        std::cout << "Pais :" << ": " << data[count] << std::endl;
-        count++;
-    }
-}
-
-//city
 void AdminScreen::cityShow(char &option) {
+    cleanScreen();
     char getOption;
     ScreenView screen;
     if(option == 'c'){
@@ -188,6 +167,112 @@ void AdminScreen::cityShow(char &option) {
 }
 
 
+//country
+void AdminScreen::countryCreate() {
+    // cleanScreen();
+    char* option = getUserOptionString("Por favor escriba el nombre de un país.", "Escriba el nombre:");
+    
+    CountryStore countryStore;
+    Country newCountry(option);
+
+    countryStore.addCountry(newCountry);
+	delete[] option;
+   
+}
+void AdminScreen::countryEdit(){
+    cleanScreen();
+    CountryStore countryStore;
+
+    char **data = countryStore.getAllCountries();    
+    int lengthData = countryStore.getNumLines();
+    if(data != nullptr){
+        std::cout<<"LISTADO DE PAISES: \n\n";   
+        for(int i = 0; i <= lengthData - 1; i++){
+            std::cout << "Pais :" << ": " << data[i] << std::endl;
+        } 
+
+        char* idOption = getUserOptionString("\nEscriba el id del país que va a editar.", "Escoge una opción: ");
+        char* nameOption = getUserOptionString("Por favor escriba el nombre de un país.", "Escriba el nombre:");
+
+    
+        Country editCountry(nameOption);
+
+        bool isEdited = countryStore.editCountry(idOption, editCountry);
+        if(isEdited){
+            std::cout<<VERDE<<"\nPaís Editado con éxito\n"<<RESET;
+            char nextOption = getUserOptionChar("\nQuiere editar otro país?.", "Escoge una opción y/n: ");
+            if(nextOption == 'y'){
+                countryEdit();
+            }else if(nextOption == 'n'){
+                nextOption = 'c';
+                countryShow(nextOption);
+            } else {
+                countryEdit();
+            }
+        }else{
+            std::cout<<ROJO<<"\nNo se pudo editar!\n"<<RESET;
+            char nextOption = getUserOptionChar("\nQuiere volver a intentarlo?.", "Escoge una opción y/n: ");
+            if(nextOption == 'y'){
+                countryEdit();
+            }else if(nextOption == 'n'){
+                nextOption = 'c';
+                countryShow(nextOption);
+            } else {
+                countryEdit();
+            }
+        }
+
+    }else {
+        std::cout<<"No hay datos Por ahora...\n";
+        char option = getUserOptionChar("Desea Agregar un país? y/n o 'm' para vovler al menu principal.", "Escoge una opción: ");
+        if( option == 'y'){
+            countryCreate();
+        }else if( option == 'n'){
+            option = 'c';
+            countryShow(option);
+        } else if( option == 'm'){
+            returnMainMenu();
+        } else {
+            countryList();
+        }
+    }
+}
+void AdminScreen::countryList() {
+    cleanScreen();
+    CountryStore countryStore;
+
+    char **data = countryStore.getAllCountries();
+    int lengthData = countryStore.getNumLines();
+
+    if(data != nullptr){
+        std::cout<<"LISTADO DE PAISES: \n\n";
+        for(int i = 0; i <= lengthData - 1; i++){
+            std::cout << "Pais :" << ": " << data[i] << std::endl;
+        }
+       
+        char option = getUserOptionChar("\nAprete cualquier tecla para regresar:", "Escriba: ");
+
+        if(option){
+            option = 'c';
+            countryShow(option);
+        }
+    }else{
+        std::cout<<"No hay datos Por ahora...\n";
+        char option = getUserOptionChar("Desea Agregar un país? y/n o 'm' para vovler al menu principal.", "Escoge una opción: ");
+        if( option == 'y'){
+            countryCreate();
+        }else if( option == 'n'){
+            option = 'c';
+            countryShow(option);
+        } else if( option == 'm'){
+            returnMainMenu();
+        } else {
+            countryList();
+        }
+    }
+}
+
+//city
 void AdminScreen::cityCreate() {
     std::cout<<"Lista de países:\n";
     countryList();
@@ -206,7 +291,8 @@ void AdminScreen::cityList() {
     
     CountryStore countryStore;
 
-    countryStore.getAllCountriesById();
+    // countryStore.getCountryById();
+
     // char **data = countryStore.getAllCountriesById();
     // int count = 0;
 

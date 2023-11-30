@@ -89,4 +89,31 @@ char** UserStore::getAllUsersById() {
     return data;
 }
 
+bool UserStore::authUser(char* email, char* password, const char* rol){
+    char* user = getUserByEmail(email);
 
+
+    if(user == nullptr){
+        return false;
+    } else{
+        char separator = ';';
+        String str(user);
+        char** res = str.split(separator);
+        
+        char* passAuth = res[3];
+        char* rolAuth = res[4];
+        int isSamePassword = std::strcmp(passAuth, password);
+        int isSameRol = std::strcmp(rolAuth, rol);
+     
+        if(isSamePassword == 0){
+            if(isSameRol == 0){
+                return true;
+            } else {
+                return false;
+            }
+        } else{
+            return false;
+        }
+    }
+                   
+}

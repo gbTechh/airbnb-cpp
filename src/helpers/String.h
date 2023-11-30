@@ -11,6 +11,7 @@ public:
   void print() const;
   bool includes(char* text);
   int length();
+  char** split(char separator);
 
 private:
     char* data;

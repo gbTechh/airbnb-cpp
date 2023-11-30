@@ -12,6 +12,7 @@ public:
     void countryShow(char &option);
     void countryCreate();
 	void countryList();
+    void countryEdit();
 
     void cityShow(char &option);
 	void cityCreate();

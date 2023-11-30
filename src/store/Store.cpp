@@ -54,7 +54,7 @@ char** Store::getAllData() {
     } else {
         std::cout << "No se pudo abrir el archivo." << std::endl;
     }
-    if(numLines == 0){
+    if (numLines == 0) {
         delete[] lineas;
         lineas = nullptr;
     }
@@ -64,6 +64,7 @@ char** Store::getAllData() {
 int Store::getNumLines() {
     return numLines;
 }
+
 int Store::getNumLinesOfFile() {
     
   std::ifstream file(filename);
@@ -92,4 +93,63 @@ void Store::createFile() {
             std::cout << "Error al crear el archivo." << filename<<std::endl;            
         } 
     }
+}
+
+// int Store::getNumOfLineFromId(char* id){
+//     std::ifstream archivo(filename);
+//     char** lineas = nullptr;
+//     int numOfLines = 0;
+//     char separator = ';';
+//     if (archivo.is_open()) {
+//         std::string linea;
+//         numLines = 0;
+
+//         while (std::getline(archivo, linea)) {
+//             String line(linea);
+//             char** dataLine = line.split(separator);
+        
+//             char* idData = dataLine[1];
+//             int isSameId = std::strcmp(idData, id);
+//             if(isSameId == 0){
+//                 numOfLines = numLines;
+//             }
+
+//             numLines++;
+//         }
+
+//         archivo.close();
+//     } else {
+//         std::cout << "No se pudo abrir el archivo." << std::endl;
+//     }
+
+//     return numOfLines;     
+// }
+
+bool Store::editLine(int numOfLine, char* newLine){
+    std::ifstream archivoEntrada(filename);
+    std::ofstream archivoTemp("temp.txt");
+
+    if (!archivoEntrada || !archivoTemp) {
+        return 0;
+    }
+
+    std::string linea;
+    int cont = 0;
+
+    while (std::getline(archivoEntrada, linea)) {
+        cont++;
+        if (cont == numOfLine) {
+            archivoTemp << newLine << '\n';
+        } else {
+            archivoTemp << linea << '\n';
+        }
+    }
+
+    archivoEntrada.close();
+    archivoTemp.close();
+
+    std::remove(filename);
+    std::rename("temp.txt", filename);
+
+    return 1;
 }
