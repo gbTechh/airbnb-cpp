@@ -95,36 +95,6 @@ void Store::createFile() {
     }
 }
 
-// int Store::getNumOfLineFromId(char* id){
-//     std::ifstream archivo(filename);
-//     char** lineas = nullptr;
-//     int numOfLines = 0;
-//     char separator = ';';
-//     if (archivo.is_open()) {
-//         std::string linea;
-//         numLines = 0;
-
-//         while (std::getline(archivo, linea)) {
-//             String line(linea);
-//             char** dataLine = line.split(separator);
-        
-//             char* idData = dataLine[1];
-//             int isSameId = std::strcmp(idData, id);
-//             if(isSameId == 0){
-//                 numOfLines = numLines;
-//             }
-
-//             numLines++;
-//         }
-
-//         archivo.close();
-//     } else {
-//         std::cout << "No se pudo abrir el archivo." << std::endl;
-//     }
-
-//     return numOfLines;     
-// }
-
 bool Store::editLine(int numOfLine, char* newLine){
     std::ifstream archivoEntrada(filename);
     std::ofstream archivoTemp("temp.txt");

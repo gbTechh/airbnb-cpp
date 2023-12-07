@@ -5,7 +5,6 @@
 #include <cstdio>
 #include "AlojamientoStore.h"
 #include "../models/Alojamiento.h"
-#include "../models/Alojamiento.h"
 #include "../helpers/String.h"
 #include "./Store.h"
 
@@ -21,7 +20,7 @@ AlojamientoStore::AlojamientoStore() : Store("../src/database/files/alojamientos
 void AlojamientoStore::addAlojamiento(const Alojamiento& alojamiento) {
     
     int rowIndex = numAlojamientos + 1;
-	  int longChar = 0;
+    int longChar = 0;
 
     String name(alojamiento.getName());
     String description(alojamiento.getDescription());
