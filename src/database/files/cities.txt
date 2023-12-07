@@ -1,0 +1,7 @@
+1;1;lima
+2;1;tacna
+3;1;puno
+4;1;piura
+5;1;moquegua
+6;2;junin
+7;2;buenos aires

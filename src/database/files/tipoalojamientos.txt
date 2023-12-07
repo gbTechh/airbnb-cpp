@@ -1,0 +1,6 @@
+1;casa
+2;habitacion
+3;hotel
+4;local
+5;casa de playa
+6;roommate

@@ -9,4 +9,8 @@ public:
     void loginScreen();
     void loginShow();
     void registerShow();
+    void menuHostShow();
+    void alojamientoShow(char &option);
+    void alojamientoList();
+    void alojamientoCreate();
 };

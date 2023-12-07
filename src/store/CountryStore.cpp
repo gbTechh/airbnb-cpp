@@ -17,7 +17,6 @@ CountryStore::CountryStore() : Store("../src/database/files/countries.txt"), cou
 void CountryStore::addCountry(const Country& country) {
     
     int rowIndex = numCountries + 1;
-    std::cout<<"rowIndex: "<<rowIndex<<"\n";
 	int longChar = 100;
     char* countryInfo = new char[longChar];
 	

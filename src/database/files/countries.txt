@@ -1,9 +1,11 @@
-1;peru
+1;perú
 2;argentina
 3;brasil
 4;paraguay
-5;mexico
+5;italia
 6;uruguay
 7;chile
 8;venezuela
 9;ecuador
+10;himalaya
+11;camerun

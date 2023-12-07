@@ -89,12 +89,12 @@ char** UserStore::getAllUsersById() {
     return data;
 }
 
-bool UserStore::authUser(char* email, char* password, const char* rol){
+char* UserStore::authUser(char* email, char* password, const char* rol){
     char* user = getUserByEmail(email);
 
 
     if(user == nullptr){
-        return false;
+        return user;
     } else{
         char separator = ';';
         String str(user);
@@ -107,12 +107,14 @@ bool UserStore::authUser(char* email, char* password, const char* rol){
      
         if(isSamePassword == 0){
             if(isSameRol == 0){
-                return true;
+                return user;
             } else {
-                return false;
+                user = nullptr;
+                return user;
             }
         } else{
-            return false;
+            user = nullptr;
+            return user;
         }
     }
                    

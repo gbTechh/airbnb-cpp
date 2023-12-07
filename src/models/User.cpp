@@ -4,6 +4,7 @@
 User::User(const char* _email, const char* _name, const char* _password)
     : email(_email), name(_name), password(_password) {}
 
+User::User() {}
 // Implementación de los métodos para obtener los atributos del usuario
 const char* User::getEmail() const {
     return email;

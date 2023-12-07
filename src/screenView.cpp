@@ -12,6 +12,8 @@ ScreenView::ScreenView() {}
 void ScreenView::start(char &input) {
     AdminScreen adminScreen;
     adminScreen.initFilesScreen();
+    HostScreen hostScreen;
+    hostScreen.initFilesScreen();
 
 
     if(input == '1' || input == '2' || input == '3' || input == '0'){

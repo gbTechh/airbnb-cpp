@@ -16,8 +16,11 @@ int Input::displayInt() {
 }
 
 float Input::displayFloat() {
-    std::cout << label << "\n";
-    std::cout << "-> ";
+    char corner = 218;
+    std::cout<<"\n";
+    std::cout << corner<<"--------------------------\n";
+    std::cout << "|"<<label << "\n";
+    std::cout << "|-> ";
     std::cin >> valueFloat;
     std::cout << "--------------------------\n";
     return valueFloat;

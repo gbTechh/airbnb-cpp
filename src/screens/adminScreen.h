@@ -17,5 +17,13 @@ public:
     void cityShow(char &option);
 	void cityCreate();
 	void cityList();
+	void cityEdit();
    
+    void alojamientosScreen(char &option);
+    void tipoAlojamientoShow(char &option);
+    void alojamientoShow(char &option);
+    void tipoAlojamientoList();
+    void tipoAlojamientoCreate();
+    void tipoAlojamientoEdit();
+
 };

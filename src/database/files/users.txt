@@ -1,3 +1,4 @@
 1;admin;admin;admin;admin
 2;fernando;fer@gmail.com;ferpass;guest
 3;admin;admin@gmail.com;administrador001;admin
+4;host prueba;host@gmail.com;host001;host

@@ -3,10 +3,15 @@
 #include "../components/input.h"
 #include "../screenView.h"
 #include "../store/CountryStore.h"
+#include "../store/CityStore.h"
 #include "../store/UserStore.h"
+#include "../store/TipoAlojamientoStore.h"
 #include "../models/Country.h"
+#include "../models/City.h"
+#include "../models/TipoAlojamiento.h"
 #include "../colors.h"
 #include "./baseScreen.h"
+#include "../helpers/String.h"
 
 AdminScreen::AdminScreen() {}
 
@@ -25,6 +30,11 @@ void AdminScreen::initFilesScreen() {
     user.createFile();
     user.createAdmin();
 
+    CityStore city;
+    city.createFile();
+
+    TipoAlojamientoStore tipoAlojamiento;
+    tipoAlojamiento.createFile();
 
 }
 
@@ -55,9 +65,9 @@ void AdminScreen::loginShow() {
         UserStore user;
 
         char* rol = "admin";
-        bool isAuth = user.authUser(username, password, rol);
+        char* userAuth = user.authUser(username, password, rol);
 
-        if(!isAuth){
+        if(userAuth == nullptr){
             loginShow();    
         }else{
             menuAdminShow();
@@ -86,7 +96,8 @@ void AdminScreen::menuAdminShow() {
     }else if(option == '3'){
         
     }else if(option == '4'){
-        
+        char opt = 'c';
+        alojamientosScreen(opt);    
     }else if(option == '0'){
         loginScreen();
     }else if(option == 'm'){
@@ -141,7 +152,7 @@ void AdminScreen::cityShow(char &option) {
             cityList();               
         }else if(option == '2'){ //Crear ciudad
             cityCreate();
-            char nextOption = getUserOptionChar("Seguir llenando datos? y/n o 'm' para vovler al menu principal.", "Escoge una opción: ");
+            char nextOption = getUserOptionChar("\nSeguir llenando datos? y/n o 'm' para volver al menu principal.", "Escoge una opción: ");
             if(nextOption == 'y'){
                 cityShow(option);
             } else if(nextOption == 'm'){
@@ -151,7 +162,7 @@ void AdminScreen::cityShow(char &option) {
             }
 
         }else if(option == '3'){ //Editar ciudad
-            
+            cityEdit();
         }else if(option == '4'){ // eliminar ciudad
             
         }else if(option == '0'){
@@ -169,7 +180,7 @@ void AdminScreen::cityShow(char &option) {
 
 //country
 void AdminScreen::countryCreate() {
-    // cleanScreen();
+    cleanScreen();
     char* option = getUserOptionString("Por favor escriba el nombre de un país.", "Escriba el nombre:");
     
     CountryStore countryStore;
@@ -258,7 +269,7 @@ void AdminScreen::countryList() {
         }
     }else{
         std::cout<<"No hay datos Por ahora...\n";
-        char option = getUserOptionChar("Desea Agregar un país? y/n o 'm' para vovler al menu principal.", "Escoge una opción: ");
+        char option = getUserOptionChar("Desea Agregar un país? Aprete 'm' para volver al menu principal.", "Agregar ciudad y/n: ");
         if( option == 'y'){
             countryCreate();
         }else if( option == 'n'){
@@ -273,31 +284,426 @@ void AdminScreen::countryList() {
 }
 
 //city
-void AdminScreen::cityCreate() {
-    std::cout<<"Lista de países:\n";
-    countryList();
-
-    char* option = getUserOptionString("Por favor escriba el ID del país al que pertenece la ciudad.", "Id del país:");
-    
-    CountryStore countryStore;
-    Country newCountry(option);
-
-    // Luego, llama al método addCountry para agregar el nuevo país a la tienda
-    countryStore.addCountry(newCountry);
-	delete[] option;
-}
 void AdminScreen::cityList() {
-    // char option = getUserOptionChar("Listando todos los países. Para retroceder aprete '0' o 'm' para ver el menú principal.");
-    
+    cleanScreen();
+    CityStore cityStore;
+
+    char **data = cityStore.getAllCities();
+    int lengthData = cityStore.getNumLines();
+
+    if(data != nullptr){
+        std::cout<<"LISTADO DE Ciudades: \n\n";
+        for(int i = 0; i <= lengthData - 1; i++){
+            std::cout << "Ciudad :" << ": " << data[i] << std::endl;
+        }
+       
+        char option = getUserOptionChar("\nAprete cualquier tecla para regresar:", "Escriba: ");
+
+        if(option){
+            option = 'c';
+            cityShow(option);
+        }
+    }else{
+        std::cout<<"No hay datos Por ahora...\n";
+        char option = getUserOptionChar("Desea Agregar una ciudad? Aprete 'm' para volver al menu principal.", "Agregar ciudad y/n: ");
+        if( option == 'y'){
+            cityCreate();
+        }else if( option == 'n'){
+            option = 'c';
+            cityShow(option);
+        } else if( option == 'm'){
+            returnMainMenu();
+        } else {
+            cityList();
+        }
+    }
+}
+void AdminScreen::cityCreate() {
+    cleanScreen();
     CountryStore countryStore;
 
-    // countryStore.getCountryById();
+    char **data = countryStore.getAllCountries();
+    int lengthData = countryStore.getNumLines();
 
-    // char **data = countryStore.getAllCountriesById();
-    // int count = 0;
+    if(data != nullptr){
+        std::cout<<"LISTADO DE PAISES: \n\n";
+        for(int i = 0; i <= lengthData - 1; i++){
+            std::cout << "Pais :" << ": " << data[i] << std::endl;
+        }        
 
-    // while (data[count] != nullptr) {
-    //     std::cout << "Pais :" << ": " << data[count] << std::endl;
-    //     count++;
-    // }
+        char* countrySelected = nullptr;
+
+        do {
+            char* option = getUserOptionString("\nPara agregar una ciudad seleccione el id de un país", "Escriba el id:");
+            countrySelected = countryStore.getCountryById(option);
+            if(countrySelected == nullptr){
+                std::cout <<ROJO<< "\nID inválido. Ingrese nuevamente\n"<<RESET;
+            }
+            delete[] option;
+        }
+        while (countrySelected == nullptr);
+        
+        char separator = ';';
+        String countryData(countrySelected);
+        char** dataCountry = countryData.split(separator);
+        char* idCountry = dataCountry[0];
+
+        if(countrySelected != nullptr){
+            char* name = getUserOptionString("Por favor escriba el nombre de la ciudad.", "Nombre de ciudad:");    
+            CityStore cityStore;
+            
+            City newCity(name, idCountry);
+
+            cityStore.addCity(newCity);
+            delete[] name;
+        }
+
+        delete[] countrySelected;
+        delete[] idCountry;
+        delete[] dataCountry;
+
+
+
+    }else{
+        std::cout<<"No hay datos Por ahora...\n";
+        char option = getUserOptionChar("Desea Agregar un país? y/n o 'm' para vovler al menu principal.", "Escoge una opción: ");
+        if( option == 'y'){
+            countryCreate();
+        }else if( option == 'n'){
+            option = 'c';
+            countryShow(option);
+        } else if( option == 'm'){
+            returnMainMenu();
+        } else {
+            countryList();
+        }
+    }
+    
+}
+void AdminScreen::cityEdit(){
+    cleanScreen();
+    CityStore cityStore;
+
+    char **data = cityStore.getAllCities();
+    int lengthData = cityStore.getNumLines();
+
+    if(data != nullptr){
+        std::cout<<VERDE<<"LISTADO DE CIUDADES: \n\n"<<RESET;   
+        for(int i = 0; i <= lengthData - 1; i++){
+            std::cout << "Ciudad :" << ": " << data[i] << std::endl;
+        } 
+
+         
+        char* cityById = nullptr;
+        char* idOption = nullptr;
+        char* name = nullptr;
+        char* idCountry = nullptr;
+        do {
+            idOption = getUserOptionString("\nEscriba el id de la ciudad que va a editar.", "Escriba el id: ");
+            cityById = cityStore.getCityById(idOption);
+            if(cityById == nullptr){
+                std::cout <<ROJO<< "\nID inválido. Ingrese nuevamente\n"<<RESET;
+            }
+        }
+        while (cityById == nullptr);
+
+        if(cityById != nullptr){
+            char nameOption = getUserOptionChar("\nDesea editar el nombre?", "Escoge una opción y/n: ");
+            if(nameOption == 'y'){
+                name = getUserOptionString("Por favor escriba el nuevo nombre de la ciudad", "Escriba el nombre:");
+            } 
+            char countryOption = getUserOptionChar("\nDesea editar el país al que pertenece?", "Escoge una opción y/n: ");
+            if(countryOption == 'y'){
+                CountryStore countryStore;
+                char **data = countryStore.getAllCountries();
+                int lengthData = countryStore.getNumLines();
+                std::cout<<VERDE<<"\nLISTADO DE PAISES: \n\n"<<RESET;
+                for(int i = 0; i <= lengthData - 1; i++){
+                    std::cout << "Pais :" << ": " << data[i] << std::endl;
+                }
+                char* countrySelected = nullptr;
+                do {
+                    idCountry = getUserOptionString("\nSelecciona el id del país", "Escriba el id:");
+                    countrySelected = countryStore.getCountryById(idCountry);
+                    if(countrySelected == nullptr){
+                        std::cout<<ROJO<<"\nID inválido. Ingrese nuevamente\n"<<RESET;
+                    }      
+                }
+                while(countrySelected == nullptr);
+                delete[] countrySelected;
+                delete[] data;
+            }
+
+            City editCity(name, idCountry);
+            bool isEdited = cityStore.editCity(idOption, editCity);
+            if(isEdited){
+                std::cout<<VERDE<<"\nCiudad editada con éxito\n"<<RESET;
+                char nextOption = getUserOptionChar("\nQuiere editar otra ciudad?.", "Escoge una opción y/n: ");
+                if(nextOption == 'y'){
+                    cityEdit();
+                }else if(nextOption == 'n'){
+                    nextOption = 'c';
+                    cityShow(nextOption);
+                } else {
+                    cityEdit();
+                }
+            }else{
+                std::cout<<ROJO<<"\nNo se pudo editar!\n"<<RESET;
+                char nextOption = getUserOptionChar("\nQuiere volver a intentarlo?.", "Escoge una opción y/n: ");
+                if(nextOption == 'y'){
+                    cityEdit();
+                }else if(nextOption == 'n'){
+                    nextOption = 'c';
+                    cityShow(nextOption);
+                } else {
+                    cityEdit();
+                }
+            }
+            
+
+        }
+
+        
+
+    }else {
+        std::cout<<"No hay datos Por ahora...\n";
+        char option = getUserOptionChar("Desea Agregar un país? y/n o 'm' para vovler al menu principal.", "Escoge una opción: ");
+        if( option == 'y'){
+            countryCreate();
+        }else if( option == 'n'){
+            option = 'c';
+            countryShow(option);
+        } else if( option == 'm'){
+            returnMainMenu();
+        } else {
+            countryList();
+        }
+    }
+}
+
+void AdminScreen::alojamientosScreen(char &option){
+    cleanScreen();
+    char getOption;
+    ScreenView screen;
+    if(option == 'c'){
+        getOption = getUserOptionChar("Módulo de Alojamientos. Por favor escoja una de las opciones, o aprete '0' para retroceder o 'm' para ver el menú principal.\n1) Ir a tipos de alojamientos\n2) Ir a alojamientos\n", "Escoge una opción: ");
+        alojamientosScreen(getOption);
+    }else {
+        if(option == '1'){ //Tipos de alojamientos
+            option = 'c';
+            tipoAlojamientoShow(option);               
+        }else if(option == '2'){ //Alojamientos
+            option = 'c';
+            alojamientoShow(option);
+        }else if(option == '0'){
+            char opt = 'c';
+            cityShow(opt);
+        }else if(option == 'm'){
+            screen.start(option);
+        }else {
+            char opt = 'c';
+            cityShow(opt);
+        }
+    }        
+}
+//Tipo alojamiento
+void AdminScreen::tipoAlojamientoShow(char &option){
+    cleanScreen();
+    char getOption;
+    ScreenView screen;
+    if(option == 'c'){
+        getOption = getUserOptionChar("Módulo de Tipos de alojamientos. Por favor escoja una de las opciones, o aprete '0' para retroceder o 'm' para ver el menú principal.\n\n1) Listar todos los tipos de alojamientos\n2) Crear nuevo tipo de alojamiento\n3) Editar tipo de alojamiento\n4) Eliminar tipo de alojamiento\n\n", "Escoge una opción: ");
+        tipoAlojamientoShow(getOption);
+    }else {
+        if(option == '1'){ //Listar ciudad
+            tipoAlojamientoList();               
+        }else if(option == '2'){ //Crear ciudad
+            tipoAlojamientoCreate();
+            char nextOption = getUserOptionChar("\nSeguir llenando datos? y/n o 'm' para volver al menu principal.", "Escoge una opción: ");
+            if(nextOption == 'y'){
+                tipoAlojamientoShow(option);
+            } else if(nextOption == 'm'){
+                screen.start(nextOption);
+            } else {
+                char opt = 'c';
+                tipoAlojamientoShow(opt);
+            }
+        }else if(option == '3'){ //Editar ciudad
+            tipoAlojamientoEdit();
+        }else if(option == '4'){ // eliminar ciudad
+            
+        }else if(option == '0'){
+            char opt = 'c';
+            tipoAlojamientoShow(opt);
+        }else if(option == 'm'){
+            screen.start(option);
+        }else {
+            char opt = 'c';
+            tipoAlojamientoShow(opt);
+        }
+    }    
+}
+void AdminScreen::tipoAlojamientoList() {
+    cleanScreen();
+    TipoAlojamientoStore tipoAlojamientoStore;
+
+    char **data = tipoAlojamientoStore.getAllTiposAlojamientos();
+    int lengthData = tipoAlojamientoStore.getNumLines();
+
+    if(data != nullptr){
+        std::cout<<VERDE<<"LISTADO DE TIPOS DE ALOJAMIENTO: \n\n"<<RESET;
+        for(int i = 0; i <= lengthData - 1; i++){
+            std::cout << "Tipo de alojamiento :" << ": " << data[i] << std::endl;
+        }
+        char option = getUserOptionChar("\nAprete cualquier tecla para regresar:", "Escriba: ");
+
+        if(option){
+            option = 'c';
+            tipoAlojamientoShow(option);
+        }
+    }else{
+        std::cout<<"No hay datos Por ahora...\n";
+        char option = getUserOptionChar("Desea Agregar un nuevo tipo de alomamiento? Aprete 'm' para volver al menu principal.", "Agregar tipo de alojamiento y/n: ");
+        if( option == 'y'){
+            tipoAlojamientoCreate();
+        }else if( option == 'n'){
+            option = 'c';
+            tipoAlojamientoShow(option);
+        } else if( option == 'm'){
+            returnMainMenu();
+        } else {
+            tipoAlojamientoList();
+        }
+    }
+}
+void AdminScreen::tipoAlojamientoCreate() {
+    cleanScreen();
+    char* option = getUserOptionString("Por favor escriba el nombre del tipo de alojamiento.", "Escriba el nombre:");
+    
+    TipoAlojamientoStore tipoAlojamiento;
+    TipoAlojamiento newTipoAlojamiento(option);
+
+    tipoAlojamiento.addTipoAlojamiento(newTipoAlojamiento);
+	delete[] option;
+    
+}
+void AdminScreen::tipoAlojamientoEdit(){
+    cleanScreen();
+    TipoAlojamientoStore tipoAlojamiento;
+
+    char **data = tipoAlojamiento.getAllTiposAlojamientos();    
+    int lengthData = tipoAlojamiento.getNumLines();
+    if(data != nullptr){
+        std::cout<<VERDE<<"LISTADO DE TIPOS DE ALOJAMIENTO: \n\n"<<RESET;   
+        for(int i = 0; i <= lengthData - 1; i++){
+            std::cout << "Tipo de alojamiento :" << ": " << data[i] << std::endl;
+        } 
+         
+        char* alojamientoById = nullptr;
+        char* idOption = nullptr;
+        char* name = nullptr;
+
+        do {
+            idOption = getUserOptionString("\nEscriba el id del tipo de alojamiento que va a editar.", "Escriba el id: ");
+            alojamientoById = tipoAlojamiento.getTipoAlojamientoById(idOption);
+            if(alojamientoById == nullptr){
+                std::cout <<ROJO<< "\nID inválido. Ingrese nuevamente\n"<<RESET;
+            }
+        }
+        while (alojamientoById == nullptr);
+
+        if(alojamientoById != nullptr){
+            char nameOption = getUserOptionChar("\nDesea editar el nombre?", "Escoge una opción y/n: ");
+            if(nameOption == 'y'){
+                name = getUserOptionString("Por favor escriba el nuevo nombre del tipo de alojamiento", "Escriba el nombre:");
+            }             
+
+            TipoAlojamiento editAlojamiento(name);
+            bool isEdited = tipoAlojamiento.editTipoAlojamiento(idOption, editAlojamiento);
+            
+            delete[] name;   
+            delete[] idOption; 
+            
+            if(isEdited){
+                std::cout<<VERDE<<"\nTipo de Alojamiento Editado con éxito\n"<<RESET;
+                char nextOption = getUserOptionChar("\nQuiere editar otro tipo de alojamiento?.", "Escoge una opción y/n: ");
+                if(nextOption == 'y'){
+                    tipoAlojamientoEdit();
+                }else if(nextOption == 'n'){
+                    nextOption = 'c';
+                    tipoAlojamientoShow(nextOption);
+                } else {
+                    tipoAlojamientoEdit();
+                }
+            }else{
+                std::cout<<ROJO<<"\nNo se pudo editar!\n"<<RESET;
+                char nextOption = getUserOptionChar("\nQuiere volver a intentarlo?.", "Escoge una opción y/n: ");
+                if(nextOption == 'y'){
+                    tipoAlojamientoEdit();
+                }else if(nextOption == 'n'){
+                    nextOption = 'c';
+                    tipoAlojamientoShow(nextOption);
+                } else {
+                    tipoAlojamientoEdit();
+                }
+            }
+
+        }
+
+        delete[] alojamientoById;
+
+        
+
+    }else {
+        std::cout<<"No hay datos Por ahora...\n";
+        char option = getUserOptionChar("Desea Agregar un país? y/n o 'm' para vovler al menu principal.", "Escoge una opción: ");
+        if( option == 'y'){
+            countryCreate();
+        }else if( option == 'n'){
+            option = 'c';
+            countryShow(option);
+        } else if( option == 'm'){
+            returnMainMenu();
+        } else {
+            countryList();
+        }
+    }
+}
+
+//Alojamientos
+void AdminScreen::alojamientoShow(char &option){
+    cleanScreen();
+    char getOption;
+    ScreenView screen;
+    if(option == 'c'){
+        getOption = getUserOptionChar("Módulo de alojamientos. Por favor escoja una de las opciones, o aprete '0' para retroceder o 'm' para ver el menú principal.\n1) Listar todos los tipos de alojamientos\n2) Crear nuevo tipo de alojamiento\n3) Editar tipo de alojamiento\n4) Eliminar tipo de alojamiento\n", "Escoge una opción: ");
+        cityShow(getOption);
+    }else {
+        if(option == '1'){ //Listar ciudad
+            cityList();               
+        }else if(option == '2'){ //Crear ciudad
+            cityCreate();
+            char nextOption = getUserOptionChar("\nSeguir llenando datos? y/n o 'm' para volver al menu principal.", "Escoge una opción: ");
+            if(nextOption == 'y'){
+                cityShow(option);
+            } else if(nextOption == 'm'){
+                screen.start(nextOption);
+            } else {
+                menuAdminShow();
+            }
+
+        }else if(option == '3'){ //Editar ciudad
+            cityEdit();
+        }else if(option == '4'){ // eliminar ciudad
+            
+        }else if(option == '0'){
+            char opt = 'c';
+            cityShow(opt);
+        }else if(option == 'm'){
+            screen.start(option);
+        }else {
+            char opt = 'c';
+            cityShow(opt);
+        }
+    }    
 }
